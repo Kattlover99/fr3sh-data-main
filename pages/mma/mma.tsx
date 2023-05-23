@@ -53,10 +53,8 @@ const Home: NextPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log("response data")
         // const res = await fetch("/api/mma/mma_ml").then((o) => o.json());
         const res = await fetch("https://prophub.ca/api/mma/mma_ml").then((o) => o.json());
-        console.log("response data", res.data)
         setData(res.data)
         // Group the array by event
         const _group_array = res.data.reduce((result, currentValue) => {
@@ -75,12 +73,11 @@ const Home: NextPage = () => {
           let { index, event, fighter, ...rest } = obj;
           return rest;
         });
-
-
-        newArray.map((element) => {
-          const values = Object.values(element).filter((value) => {
+        newArray.map((element: {}) => {
+          let values_arr: unknown[] = Object.values(element).filter((value: number) => {
             return typeof value === "number";
           });
+          const values: number[] = values_arr as number[];
           const highestValue: number = Math.max(...values);
           highestValues.push(highestValue);
         });
@@ -106,7 +103,6 @@ const Home: NextPage = () => {
                 <h2>{item}</h2>
                 <TableContainer component={Paper} key={index}>
                   <Table sx={{ minWidth: 650 }} aria-label="caption table">
-
                     <TableHead>
                       <TableRow>
                         <TableCell>fighter</TableCell>
@@ -129,14 +125,10 @@ const Home: NextPage = () => {
                         <TableCell align="right">twinspires</TableCell>
                         <TableCell align="right">unibet_eu</TableCell>
                         <TableCell align="right">unibet_us</TableCell>
-
-
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {topValues && topValues.length > 0 && groupedData[item].map((row) => {
-                        console.log("row.index", row.index)
-                        console.log("highestValues[parseInt(row.index) - 1", topValues[row.index - 1]);
                         return (
                           <TableRow key={row.name}>
                             <TableCell component="th" scope="row">
